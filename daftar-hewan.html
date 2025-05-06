@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Daftar Hewan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="p-6">
+    <div
+      class="max-w-3xl mx-auto bg-white bg-opacity-30 backdrop-blur-md p-6 rounded-xl shadow-md"
+    >
+      <h1 class="text-3xl font-bold mb-6 text-center">Daftar Hewan Tercatat</h1>
+      <div id="list" class="space-y-4"></div>
+      <div class="text-center mt-8">
+        <a
+          href="index.html"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >Tambah Data Baru</a
+        >
+      </div>
+    </div>
+
+    <script>
+      function tampilkanData() {
+        const daftar = JSON.parse(localStorage.getItem("hewan")) || [];
+        const container = document.getElementById("list");
+        container.innerHTML = "";
+
+        if (daftar.length === 0) {
+          container.innerHTML = `<p class="text-gray-500 text-center">Belum ada data hewan.</p>`;
+          return;
+        }
+
+        daftar.forEach((item, index) => {
+          const card = document.createElement("div");
+          card.className =
+            "bg-white p-4 rounded-xl shadow border flex gap-4 justify-between items-start";
+
+          card.innerHTML = `
+          <div class="flex gap-4">
+            ${
+              item.foto
+                ? `<img src="${item.foto}" class="w-24 h-24 rounded-lg object-cover border" />`
+                : ""
+            }
+            <div>
+              <h3 class="text-lg font-semibold">${item.nama}</h3>
+              <p class="text-gray-600">Jenis: ${item.jenis}</p>
+              <p class="text-gray-600">Umur: ${item.umur} tahun</p>
+              ${
+                item.catatan
+                  ? `<p class="text-gray-500 text-sm">Catatan: ${item.catatan}</p>`
+                  : ""
+              }
+            </div>
+          </div>
+          <button onclick="hapusData(${index})" class="text-red-600 hover:text-red-800 font-bold text-xl">&times;</button>
+        `;
+
+          container.appendChild(card);
+        });
+      }
+
+      function hapusData(index) {
+        if (!confirm("Yakin ingin menghapus data ini?")) return;
+        const data = JSON.parse(localStorage.getItem("hewan")) || [];
+        data.splice(index, 1);
+        localStorage.setItem("hewan", JSON.stringify(data));
+        tampilkanData();
+      }
+
+      document.addEventListener("DOMContentLoaded", tampilkanData);
+    </script>
+  </body>
+</html>
